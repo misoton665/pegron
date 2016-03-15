@@ -1,5 +1,8 @@
 package org.misoton
 
+import org.misoton.BinaryOperator._
+import org.misoton.Primitive.{IntPrimitive, PrimitiveNode}
+
 import scala.util.parsing.combinator.RegexParsers
 
 object ArithmeticalTextParser extends RegexParsers{
@@ -9,90 +12,6 @@ object ArithmeticalTextParser extends RegexParsers{
 
   trait AST {
     def eval(env: Environment): AST
-  }
-
-  case class AddOp(left: AST, right: AST) extends AST {
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(lVal + rVal)
-    }
-  }
-  case class SubOp(left: AST, right: AST) extends AST{
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(lVal - rVal)
-    }
-  }
-  case class MulOp(left: AST, right: AST) extends AST{
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(lVal * rVal)
-    }
-  }
-  case class DivOp(left: AST, right: AST) extends AST{
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(lVal / rVal)
-    }
-  }
-  case class ModOp(left: AST, right: AST) extends AST{
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(lVal % rVal)
-    }
-  }
-  case class PowOp(left: AST, right: AST) extends AST{
-    override def eval(env: Environment): AST = {
-      val lVal = left.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      val rVal = right.eval(env) match {
-        case IntVal(value) => value
-      }
-
-      IntVal(Math.pow(lVal, rVal).toInt)
-    }
-  }
-  case class IntVal(value: Int) extends AST {
-    override def eval(environment: Environment): AST = {
-      this
-    }
   }
 
   // Expression[BEGIN]
@@ -116,7 +35,7 @@ object ArithmeticalTextParser extends RegexParsers{
 
   lazy val primary = "(" ~> RS ~> expression <~ RS <~ ")" ^^ {x => x} | number
 
-  def number: Parser[AST] = """-?[1-9][0-9]*|0""".r ^^ {x => IntVal(x.toInt)}
+  def number: Parser[AST] = """-?[1-9][0-9]*|0""".r ^^ {x => PrimitiveNode(IntPrimitive(x.toInt))}
 
   def RS = rep(space)
   def space = elem(' ') | elem('\t') | elem('\n') | elem('\r')
