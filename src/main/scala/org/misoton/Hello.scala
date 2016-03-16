@@ -10,12 +10,14 @@ object Hello {
     println(ArithmeticalTextParser("if( true ){ 1 + 2 }else{ 0 + 4 }"))
     println(ArithmeticalTextParser("if( false ){ 1 + 2 }else{ 0 + 4 }"))
 
+    println(ArithmeticalTextParser("3 + 6 != 3 * 3"))
+
     val code =
-      """if( true ){
+      """1 + (if( 1 == 1 ){
         |   2*-3/-3+-9
         |}else{
         |   0
-        |}
+        |})
       """.stripMargin
 
     println(ArithmeticalTextParser(code))

@@ -17,17 +17,17 @@ object ArithmeticalTextParser extends RegexParsers{
 
   // Expression[BEGIN]
 
-  def expression: Parser[AST] = RS ~> (arithmeticExpression | boolExpression) <~ RS
+  def expression: Parser[AST] = RS ~> (boolExpression | arithmeticExpression) <~ RS
 
   def arithmeticExpression: Parser[AST] = additive | ifExp
 
-  def boolExpression: Parser[AST] = bool
+  def boolExpression: Parser[AST] = bool_op | bool
 
-  def ifExp: Parser[AST] = "if(" ~ RS ~ bool ~ RS ~ "){" ~ RS ~ expression ~ RS ~ "}else{" ~ RS ~ expression ~ RS ~ "}" ^^
+  def ifExp: Parser[AST] = "if(" ~ RS ~ boolExpression ~ RS ~ "){" ~ RS ~ expression ~ RS ~ "}else{" ~ RS ~ expression ~ RS ~ "}" ^^
     {case _~_~ cond ~_~_~_~ positive ~_~_~_~ negative ~_~_ => IfExp(cond, positive, negative)}
 
 
-  def bool_op: Parser[AST] = chainl1(additive,
+  def bool_op: Parser[AST] = chainl1(arithmeticExpression,
     "==" ^^ {op => (left: AST, right: AST) => EqOp(left, right)}|
     "!=" ^^ {op => (left: AST, right: AST) => UneqOp(left, right)})
 
