@@ -1,7 +1,8 @@
 package org.misoton
 
 import org.misoton.BinaryOperator._
-import org.misoton.Primitive.{IntPrimitive, PrimitiveNode}
+import org.misoton.Expression.IfExp
+import org.misoton.Primitive.{BooleanPrimitive, IntPrimitive, PrimitiveNode}
 
 import scala.util.parsing.combinator.RegexParsers
 
@@ -16,7 +17,22 @@ object ArithmeticalTextParser extends RegexParsers{
 
   // Expression[BEGIN]
 
-  def expression: Parser[AST] = RS ~> additive <~ RS
+  def expression: Parser[AST] = RS ~> (arithmeticExpression | boolExpression) <~ RS
+
+  def arithmeticExpression: Parser[AST] = additive | ifExp
+
+  def boolExpression: Parser[AST] = bool
+
+  def ifExp: Parser[AST] = "if(" ~ RS ~ bool ~ RS ~ "){" ~ RS ~ expression ~ RS ~ "}else{" ~ RS ~ expression ~ RS ~ "}" ^^
+    {case _~_~ cond ~_~_~_~ positive ~_~_~_~ negative ~_~_ => IfExp(cond, positive, negative)}
+
+
+  def bool_op: Parser[AST] = chainl1(additive,
+    "==" ^^ {op => (left: AST, right: AST) => EqOp(left, right)}|
+    "!=" ^^ {op => (left: AST, right: AST) => UneqOp(left, right)})
+
+  def bool: Parser[AST] = "true"  ^^ {lit => PrimitiveNode(BooleanPrimitive(true))}|
+                          "false" ^^ {lit => PrimitiveNode(BooleanPrimitive(false))}
 
   def additive = chainl1(multiplication,
     "+" ^^ {op => (left: AST, right: AST) => AddOp(left, right)}|
@@ -37,6 +53,7 @@ object ArithmeticalTextParser extends RegexParsers{
 
   def number: Parser[AST] = """-?[1-9][0-9]*|0""".r ^^ {x => PrimitiveNode(IntPrimitive(x.toInt))}
 
+  def PS = space ~ RS
   def RS = rep(space)
   def space = elem(' ') | elem('\t') | elem('\n') | elem('\r')
 
