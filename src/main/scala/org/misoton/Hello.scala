@@ -13,11 +13,15 @@ object Hello {
     println(ArithmeticalTextParser("3 + 6 != 3 * 3"))
 
     val code =
-      """1 + (if( 1 == 1 ){
-        |   2*-3/-3+-9
+      """1 + if( 1 == 1 ){
+        |   if(1 + 3 == 9){
+        |     10
+        |   }else{
+        |     100
+        |   }
         |}else{
         |   0
-        |})
+        |}
       """.stripMargin
 
     println(ArithmeticalTextParser(code))

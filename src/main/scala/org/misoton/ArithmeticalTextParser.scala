@@ -17,9 +17,11 @@ object ArithmeticalTextParser extends RegexParsers{
 
   // Expression[BEGIN]
 
-  def expression: Parser[AST] = RS ~> (boolExpression | arithmeticExpression) <~ RS
+  def expression: Parser[AST] = RS ~> (boolExpression | arithmeticExpression | controlExpression) <~ RS
 
-  def arithmeticExpression: Parser[AST] = additive | ifExp
+  def arithmeticExpression: Parser[AST] = additive
+
+  def controlExpression: Parser[AST] = ifExp
 
   def boolExpression: Parser[AST] = bool_op | bool
 
@@ -49,7 +51,7 @@ object ArithmeticalTextParser extends RegexParsers{
     "**" ^^ {op => (left: AST, right: AST) => PowOp(left, right)}
   )
 
-  lazy val primary = "(" ~> RS ~> expression <~ RS <~ ")" ^^ {x => x} | number
+  lazy val primary = "(" ~> RS ~> expression <~ RS <~ ")" ^^ {x => x} | number | controlExpression
 
   def number: Parser[AST] = """-?[1-9][0-9]*|0""".r ^^ {x => PrimitiveNode(IntPrimitive(x.toInt))}
 
