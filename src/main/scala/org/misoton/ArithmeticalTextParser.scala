@@ -1,14 +1,18 @@
 package org.misoton
 
+import java.util
+
 import org.misoton.BinaryOperator._
-import org.misoton.Expression.IfExp
+import org.misoton.Expression._
 import org.misoton.Primitive.{BooleanPrimitive, IntPrimitive, PrimitiveNode}
+import org.misoton.Variable.{LookPrimitiveVariable, DefinePrimitiveVariable}
 
 import scala.util.parsing.combinator.RegexParsers
 
 object ArithmeticalTextParser extends RegexParsers{
 
   class Environment {
+    val variable: util.HashMap[String, AST] = new util.HashMap[String, AST]
   }
 
   trait AST {
@@ -21,7 +25,7 @@ object ArithmeticalTextParser extends RegexParsers{
 
   def arithmeticExpression: Parser[AST] = additive
 
-  def controlExpression: Parser[AST] = ifExp
+  def controlExpression: Parser[AST] = ifExp | defVariable | lookVariable
 
   def boolExpression: Parser[AST] = bool_op | bool
 
@@ -53,7 +57,15 @@ object ArithmeticalTextParser extends RegexParsers{
 
   lazy val primary = "(" ~> RS ~> expression <~ RS <~ ")" ^^ {x => x} | number | controlExpression
 
-  def number: Parser[AST] = """-?[1-9][0-9]*|0""".r ^^ {x => PrimitiveNode(IntPrimitive(x.toInt))}
+  def defVariable: Parser[DefinePrimitiveVariable] = "var" ~ PS ~ name ~ RS ~  "=" ~ RS ~ arithmeticExpression ~ ";" ^^ {
+    case _~_~ varName ~_~_~_~ varValue ~_ => DefinePrimitiveVariable(varName, varValue)
+  }
+
+  def lookVariable: Parser[LookPrimitiveVariable] = "@" ~ name ^^ {case _ ~ x => LookPrimitiveVariable(x)}
+
+  def name: Parser[String] = """[A-Za-z_]+[A-Za-z0-9_]*""".r ^^ {x => x.toString}
+
+  def number: Parser[PrimitiveNode[Int]] = """-?[1-9][0-9]*|0""".r ^^ {x => PrimitiveNode(IntPrimitive(x.toInt))}
 
   def PS = space ~ RS
   def RS = rep(space)

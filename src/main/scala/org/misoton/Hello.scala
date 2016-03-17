@@ -12,8 +12,11 @@ object Hello {
 
     println(ArithmeticalTextParser("3 + 6 != 3 * 3"))
 
+    println(ArithmeticalTextParser("var x = 9;"))
+
     val code =
-      """1 + if( 1 == 1 ){
+      """var x = 1;
+        |@x + if( 1 == 1 ){
         |   if(1 + 3 == 9){
         |     10
         |   }else{
