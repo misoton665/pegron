@@ -1,5 +1,8 @@
 package org.misoton.hello
 
+import org.misoton.hello.ArithmeticalTextParser.{AST, Environment}
+import org.misoton.hello.Primitive.{BooleanPrimitive, Primitive, PrimitiveNode}
+
 object Expression {
 
   case class IfExp(cond: AST, positive: AST, negative: AST) extends AST {

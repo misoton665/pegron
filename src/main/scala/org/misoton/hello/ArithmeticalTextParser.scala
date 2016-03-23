@@ -2,6 +2,11 @@ package org.misoton.hello
 
 import java.util
 
+import org.misoton.hello.BinaryOperator._
+import org.misoton.hello.Expression.IfExp
+import org.misoton.hello.Primitive.{BooleanPrimitive, IntPrimitive, PrimitiveNode}
+import org.misoton.hello.Variable.{DefinePrimitiveVariable, LookPrimitiveVariable}
+
 import scala.util.parsing.combinator.RegexParsers
 
 object ArithmeticalTextParser extends RegexParsers{

@@ -1,5 +1,8 @@
 package org.misoton.hello
 
+import org.misoton.hello.ArithmeticalTextParser.{AST, Environment}
+import org.misoton.hello.Primitive.{BooleanPrimitive, NumericPrimitive, Primitive, PrimitiveNode}
+
 object BinaryOperator {
   type P[T] = Primitive[T]
   type NP[T] = NumericPrimitive[T]

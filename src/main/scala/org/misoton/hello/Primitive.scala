@@ -1,5 +1,7 @@
 package org.misoton.hello
 
+import org.misoton.hello.ArithmeticalTextParser.{AST, Environment}
+
 object Primitive {
 
   trait Primitive[T] {
@@ -17,7 +19,7 @@ object Primitive {
     def !=(right: NumericPrimitive[T]): BooleanPrimitive
   }
 
-  case class IntPrimitive(val left: Int) extends NumericPrimitive[Int] {
+  case class IntPrimitive(left: Int) extends NumericPrimitive[Int] {
     type P = NumericPrimitive[Int]
 
     override def +(that: P): P = IntPrimitive(this.value + that.value)
@@ -39,7 +41,7 @@ object Primitive {
     override val value: Int = left
   }
 
-  case class BooleanPrimitive(val left: Boolean) extends Primitive[Boolean] {
+  case class BooleanPrimitive(left: Boolean) extends Primitive[Boolean] {
     type P = BooleanPrimitive
 
     def ||(that: P): P = BooleanPrimitive(this.value || that.value)
