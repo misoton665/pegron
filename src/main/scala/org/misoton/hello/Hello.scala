@@ -1,4 +1,4 @@
-package org.misoton
+package org.misoton.hello
 
 object Hello {
   def main(args: Array[String]): Unit = {

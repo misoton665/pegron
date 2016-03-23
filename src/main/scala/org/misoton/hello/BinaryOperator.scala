@@ -1,7 +1,4 @@
-package org.misoton
-
-import org.misoton.ArithmeticalTextParser.{Environment, AST}
-import org.misoton.Primitive.{NumericPrimitive, BooleanPrimitive, Primitive, PrimitiveNode}
+package org.misoton.hello
 
 object BinaryOperator {
   type P[T] = Primitive[T]

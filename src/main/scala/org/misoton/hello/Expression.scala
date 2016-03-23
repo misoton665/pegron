@@ -1,7 +1,4 @@
-package org.misoton
-
-import org.misoton.ArithmeticalTextParser.{Environment, AST}
-import org.misoton.Primitive.{Primitive, PrimitiveNode, BooleanPrimitive}
+package org.misoton.hello
 
 object Expression {
 

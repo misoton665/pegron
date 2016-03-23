@@ -1,11 +1,6 @@
-package org.misoton
+package org.misoton.hello
 
 import java.util
-
-import org.misoton.BinaryOperator._
-import org.misoton.Expression._
-import org.misoton.Primitive.{BooleanPrimitive, IntPrimitive, PrimitiveNode}
-import org.misoton.Variable.{LookPrimitiveVariable, DefinePrimitiveVariable}
 
 import scala.util.parsing.combinator.RegexParsers
 

@@ -1,7 +1,4 @@
-package org.misoton
-
-import org.misoton.ArithmeticalTextParser.{Environment, AST}
-import org.misoton.Primitive.{PrimitiveNode, Primitive}
+package org.misoton.hello
 
 object Variable {
   case class DefinePrimitiveVariable(name: String, primitive: AST) extends AST{

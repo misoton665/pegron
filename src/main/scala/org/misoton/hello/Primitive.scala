@@ -1,6 +1,4 @@
-package org.misoton
-
-import org.misoton.ArithmeticalTextParser.{Environment, AST}
+package org.misoton.hello
 
 object Primitive {
 
