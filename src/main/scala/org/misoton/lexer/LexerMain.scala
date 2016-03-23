@@ -1,8 +1,7 @@
 package org.misoton.lexer
 
-/**
-  * Created by misoton on 2016/03/23.
-  */
-class LexerMain {
+object LexerMain {
+  def main(args: Array[String]): Unit = {
 
+  }
 }
