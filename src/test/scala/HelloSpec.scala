@@ -68,6 +68,17 @@ class HelloSpec extends FlatSpec with Matchers {
     parseAll("helloparserhoge", parser1 ~> parser2 <~ parser3) should be(Right("parser"))
   }
 
+  "Parser (!a)" should "parse (a) to be error" in {
+    val parser = "hello"
+    parseAll("hello", parser.!) should be(Left(ParseError("Parsing succeed, but excepted to failure: hello", State("", 5))))
+  }
+
+  "Parser (!a ~ b)" should "parse (b) to be success" in {
+    val parser1 = "hello"
+    val parser2 = "hey"
+    parseAll("hey", parser1.! ~ parser2) should be(Right((), "hey"))
+  }
+
   "Over string parsing" should "be error" in {
     val parser = "hello"
     parseAll("hello_", parser) should be(Left(ParseError("Left some string", State("_", 5))))
