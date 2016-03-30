@@ -11,3 +11,6 @@ libraryDependencies ++= Seq(
 // Uncomment to use Akka
 //libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11"
 
+
+
+fork in run := true
