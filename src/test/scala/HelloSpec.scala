@@ -18,6 +18,16 @@ class HelloSpec extends FlatSpec with Matchers {
     parseAll("hey", parser) should be(Left(ParseError("hey cannot match with hello", State("hey", 0))))
   }
 
+  "Regex Literal" should "parse itself" in {
+    val parser = """([a-zA-Z]+)""".r
+    parseAll("hogehogefugapiyo", parser) should be(Right("hogehogefugapiyo"))
+  }
+
+  "Unmatched regex literal parsing" should " be error" in {
+    val parser = """([a-zA-Z]+)""".r
+    parseAll("hogehogefugapiyo0", parser) should be(Left(ParseError("hogehogefugapiyo0 cannot match with ([a-zA-Z]+)", State("hogehogefugapiyo0", 0))))
+  }
+
   "Connected Parser with \"~\"" should "be Parser" in {
     val parser1 = "hello"
     val parser2 = "parser"

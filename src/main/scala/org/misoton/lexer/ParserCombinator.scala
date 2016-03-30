@@ -1,5 +1,7 @@
 package org.misoton.lexer
 
+import scala.util.matching.Regex
+
 object ParserCombinator {
 
   case class State(input: String, pos: Int)
@@ -77,4 +79,11 @@ object ParserCombinator {
     if(in.input startsWith str) Right((str, State(in.input substring str.length, in.pos + str.length)))
     else Left(ParseError(in.input + " cannot match with " + str, in))
   }).named(str)
+
+  implicit def regex2parser(regex: Regex): Parser[String] = parserGen((in) => {
+    in.input match {
+      case regex(value) => Right((value, State(in.input substring value.length, in.pos + value.length)))
+      case _ => Left(ParseError(in.input + " cannot match with " + regex.toString, in))
+    }
+  }).named(regex.toString)
 }
