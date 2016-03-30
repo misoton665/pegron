@@ -13,16 +13,40 @@ class HelloSpec extends FlatSpec with Matchers {
     parser("hello") should be(Right("hello", ""))
   }
 
-  "Connected Parser" should "be Parser" in {
+  "Connected Parser with \"~\"" should "be Parser" in {
     val parser1 = "hello"
     val parser2 = "parser"
     (parser1 ~ parser2).toString should be("hello~parser")
   }
 
-  "Connected Parser" should "parse connected string" in {
+  "Connected Parser with \"~>\"" should "be Parser" in {
+    val parser1 = "hello"
+    val parser2 = "parser"
+    (parser1 ~> parser2).toString should be("hello~>parser")
+  }
+
+  "Connected Parser with \"<~\"" should "be Parser" in {
+    val parser1 = "hello"
+    val parser2 = "parser"
+    (parser1 <~ parser2).toString should be("hello<~parser")
+  }
+
+  "Connected Parser with \"~\"" should "parse connected string" in {
     val parser1 = "hello"
     val parser2 = "parser"
     parseAll("helloparser", parser1 ~ parser2) should be(Right(("hello", "parser")))
+  }
+
+  "Connected Parser with \"~>\"" should "parse connected string" in {
+    val parser1 = "hello"
+    val parser2 = "parser"
+    parseAll("helloparser", parser1 ~> parser2) should be(Right("parser"))
+  }
+
+  "Connected Parser with \"<~\"" should "parse connected string" in {
+    val parser1 = "hello"
+    val parser2 = "parser"
+    parseAll("helloparser", parser1 <~ parser2) should be(Right("hello"))
   }
 
   "Over string parsing" should "be error" in {
