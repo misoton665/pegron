@@ -4,7 +4,7 @@ object ParserCombinator {
 
   case class State(input: String, pos: Int)
 
-  case class ParseError(message: String, state: State) extends RuntimeException
+  case class ParseError(message: String, state: State)
 
   type ParseResult[T] = Either[ParseError, (T, State)]
 
