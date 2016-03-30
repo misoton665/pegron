@@ -1,12 +1,9 @@
 package org.misoton.lexer
 
+import org.misoton.lexer.ParserCombinator._
+
 object LexerMain {
   def main(args: Array[String]): Unit = {
-    val a = 1 to 10
-    val b = 1 to 10
-
-    val c = for(i <- a; j <- b) yield i + ":" + j
-    val d: () => Int = ???
-    c.foreach(println)
+    println("Run LexerMain")
   }
 }
