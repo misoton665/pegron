@@ -43,6 +43,16 @@ object ParserCombinator {
       }
     }).named(this.name + "<~" + that.name)
 
+    def /[R >: T](that: Parser[R]): Parser[R] = parserGen((in) => {
+      this(in) match {
+        case r@Right(_) => r
+        case Left(_) => that(in) match {
+          case r2@Right(_) => r2
+          case Left(e) => Left(e)
+        }
+      }
+    }).named(this.name + "~" + that.name)
+
     def `!`: Parser[Unit] = parserGen((in) => {
       this(in) match {
         case Right((a, s)) => Left(ParseError("Parsing succeed, but excepted to failure: " + a, s))
