@@ -6,9 +6,9 @@ object ParserCombinator {
 
   case class ParseError(message: String, state: State) extends RuntimeException
 
-  type ParseResult[T] = Either[ParseError, (T, String)]
+  type ParseResult[T] = Either[ParseError, (T, State)]
 
-  abstract class Parser[+T] extends (String => ParseResult[T]) {
+  abstract class Parser[+T] extends (State => ParseResult[T]) {
 
     private var name: String = ""
 
@@ -44,20 +44,20 @@ object ParserCombinator {
     }).named(this.name + "<~" + that.name)
   }
 
-  def parserGen[T](f: String => ParseResult[T]): Parser[T] =
+  def parserGen[T](f: State => ParseResult[T]): Parser[T] =
     new Parser[T] {
-      def apply(input: String): ParseResult[T] = f(input)
+      def apply(input: State): ParseResult[T] = f(input)
     }
 
   def parseAll[T](input: String, parser: Parser[T]): Either[ParseError, T] = {
-    parser(input) match {
-      case Right((tree, left)) => if(left.length == 0) Right(tree) else Left(ParseError("Left some string", State(left, 0)))
+    parser(State(input, 0)) match {
+      case Right((tree, State(left, pos))) => if(left.length == 0) Right(tree) else Left(ParseError("Left some string", State(left, pos)))
       case Left(e) => Left(e)
     }
   }
 
   implicit def string2parser(str: String): Parser[String] = parserGen((in) => {
-    if(in startsWith str) Right((str, in substring str.length))
-    else Left(ParseError("hoge", State("d", 0)))
+    if(in.input startsWith str) Right((str, State(in.input substring str.length, in.pos + str.length)))
+    else Left(ParseError(in.input + " cannot match with " + str, in))
   }).named(str)
 }
