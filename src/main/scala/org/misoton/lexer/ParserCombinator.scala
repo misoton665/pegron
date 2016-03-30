@@ -10,7 +10,7 @@ object ParserCombinator {
 
   abstract class Parser[+T] extends (String => ParseResult[T]) {
 
-    var name: String = ""
+    private var name: String = ""
 
     def named(name: String): Parser[T] = {
       this.name = name

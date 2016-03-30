@@ -5,7 +5,7 @@ import org.misoton.lexer.ParserCombinator._
 class HelloSpec extends FlatSpec with Matchers {
   "String Literal" should "be parser" in {
     val parser = "hello"
-    parser.name should be("hello")
+    parser.toString should be("hello")
   }
 
   "String Literal" should "parse itself" in {
@@ -16,7 +16,7 @@ class HelloSpec extends FlatSpec with Matchers {
   "Connected Parser" should "be Parser" in {
     val parser1 = "hello"
     val parser2 = "parser"
-    (parser1 ~ parser2).name should be("hello~parser")
+    (parser1 ~ parser2).toString should be("hello~parser")
   }
 
   "Connected Parser" should "parse connected string" in {
