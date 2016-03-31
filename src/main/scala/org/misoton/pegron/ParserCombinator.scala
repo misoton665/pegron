@@ -116,6 +116,13 @@ object ParserCombinator {
         case Left(e) => Right((None, in))
       }
     })
+
+    def ^^[R](f: T => R) : Parser[R] = parserGen((in) => {
+      this(in) match {
+        case Right((t, s)) => Right(f(t), s)
+        case Left(e) => Left(e)
+      }
+    })
   }
 
   def parserGen[T](f: State => ParseResult[T]): Parser[T] =

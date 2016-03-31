@@ -125,4 +125,9 @@ class HelloSpec extends FlatSpec with Matchers {
     val parser = "hello"
     parseAll("hello_", parser) should be(Left(ParseError("Left some string", State("_", 5))))
   }
+
+  "String \"1\" be evaluated to 1" should "be success" in {
+    val parser = """([0-9]+)""".r
+    parseAll("1", parser ^^ {(x) => x.toInt}) should be(Right(1))
+  }
 }
