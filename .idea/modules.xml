@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/flan.iml" filepath="$PROJECT_DIR$/.idea/modules/flan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/flan-build.iml" filepath="$PROJECT_DIR$/.idea/modules/flan-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pegron.iml" filepath="$PROJECT_DIR$/.idea/modules/pegron.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pegron-build.iml" filepath="$PROJECT_DIR$/.idea/modules/pegron-build.iml" />
     </modules>
   </component>
 </project>
