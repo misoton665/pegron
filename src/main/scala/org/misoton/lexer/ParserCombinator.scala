@@ -109,6 +109,13 @@ object ParserCombinator {
 
       parse(in, this)
     })
+
+    def `?`: Parser[Option[T]] = parserGen((in) => {
+      this(in) match {
+        case Right((a, s)) => Right((Some(a), s))
+        case Left(e) => Right((None, in))
+      }
+    })
   }
 
   def parserGen[T](f: State => ParseResult[T]): Parser[T] =

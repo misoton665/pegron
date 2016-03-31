@@ -25,7 +25,7 @@ class HelloSpec extends FlatSpec with Matchers {
 
   "Unmatched regex literal parsing" should " be error" in {
     val parser = """([a-zA-Z]+)""".r
-    parseAll("hogehogefugapiyo0", parser) should be(Left(ParseError("hogehogefugapiyo0 cannot match with ([a-zA-Z]+)", State("hogehogefugapiyo0", 0))))
+    parseAll("hogehogefugapiyo0", parser) should be(Left(ParseError("Left some string", State("0", 16))))
   }
 
   "Connected Parser with \"~\"" should "be Parser" in {
@@ -109,6 +109,16 @@ class HelloSpec extends FlatSpec with Matchers {
   "Parser (a*)" should "parse () to be success" in {
     val parser1: Parser[String] = "hello"
     parseAll("", parser1.*) should be(Right(List()))
+  }
+
+  "Parser (a?)" should "parse () to be success" in {
+    val parser1: Parser[String] = "hello"
+    parseAll("", parser1.?) should be(Right(None))
+  }
+
+  "Parser (a?)" should "parse (a) to be success" in {
+    val parser1: Parser[String] = "hello"
+    parseAll("hello", parser1.?) should be(Right(Some("hello")))
   }
 
   "Over string parsing" should "be error" in {
