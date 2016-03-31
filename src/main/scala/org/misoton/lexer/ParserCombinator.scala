@@ -86,6 +86,29 @@ object ParserCombinator {
 
       parse(in, this)
     })
+
+    def `+`: Parser[List[T]] = parserGen((in) => {
+      def parse(state: State, parser: Parser[T]): ParseResult[List[T]] = {
+        implicit def result2List(parseResult: ParseResult[List[T]]): List[T] = parseResult match {
+          case Right((t, s)) => t
+          case Left(_) => List[T]()
+        }
+
+        parser(state) match {
+          case Right((t, s)) =>
+            val result = parse(s, parser)
+            val lastState = result match {
+              case Right((_, nextState)) => nextState
+              case Left(_) => s
+            }
+            Right((t :: result, lastState))
+
+          case Left(e) => Left(e)
+        }
+      }
+
+      parse(in, this)
+    })
   }
 
   def parserGen[T](f: State => ParseResult[T]): Parser[T] =
@@ -106,8 +129,9 @@ object ParserCombinator {
   }).named(str)
 
   implicit def regex2parser(regex: Regex): Parser[String] = parserGen((in) => {
+    val splitRegex: Regex = (regex.toString + """(.*)""").r
     in.input match {
-      case regex(value) => Right((value, State(in.input substring value.length, in.pos + value.length)))
+      case splitRegex(value, left) => Right((value, State(left, in.pos + value.length)))
       case _ => Left(ParseError(in.input + " cannot match with " + regex.toString, in))
     }
   }).named(regex.toString)
