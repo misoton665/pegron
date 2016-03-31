@@ -1,4 +1,4 @@
-package org.misoton.lexer
+package org.misoton.pegron
 
 import scala.util.matching.Regex
 

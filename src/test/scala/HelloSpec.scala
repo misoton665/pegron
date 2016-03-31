@@ -1,6 +1,6 @@
 import org.scalatest._
 
-import org.misoton.lexer.ParserCombinator._
+import org.misoton.pegron.ParserCombinator._
 
 class HelloSpec extends FlatSpec with Matchers {
   "String Literal" should "be parser" in {
