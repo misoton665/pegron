@@ -63,6 +63,29 @@ object ParserCombinator {
     }).named("!" + this.name)
 
     def unary_& : Parser[Unit] = !(!this)
+
+    def `*`: Parser[List[T]] = parserGen((in) => {
+      def parse(state: State, parser: Parser[T]): ParseResult[List[T]] = {
+        implicit def result2List(parseResult: ParseResult[List[T]]): List[T] = parseResult match {
+          case Right((t, s)) => t
+          case Left(_) => List[T]()
+        }
+
+        parser(state) match {
+          case Right((t, s)) =>
+            val result = parse(s, parser)
+            val lastState = result match {
+              case Right((_, nextState)) => nextState
+              case Left(_) => s
+            }
+            Right((t :: result, lastState))
+
+          case Left(e) => Right((List(), state))
+        }
+      }
+
+      parse(in, this)
+    })
   }
 
   def parserGen[T](f: State => ParseResult[T]): Parser[T] =
