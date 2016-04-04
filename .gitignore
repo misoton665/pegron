@@ -38,3 +38,4 @@ project/play-fork-run.sbt
 /project/target/
 /target/
 .idea/workspace.xml
+src/main/scala/org/misoton/pegron/Main.scala
