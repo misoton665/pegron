@@ -1,5 +1,5 @@
+import org.misoton.pegron.ParsedWord.~
 import org.scalatest._
-
 import org.misoton.pegron.ParserCombinator._
 
 class HelloSpec extends FlatSpec with Matchers {
@@ -49,7 +49,7 @@ class HelloSpec extends FlatSpec with Matchers {
   "Connected Parser with \"~\"" should "parse connected string" in {
     val parser1 = "hello"
     val parser2 = "parser"
-    parseAll("helloparser", parser1 ~ parser2) should be(Right(("hello", "parser")))
+    parseAll("helloparser", parser1 ~ parser2) should be(Right(new ~("hello", "parser")))
   }
 
   "Connected Parser with \"~>\"" should "parse connected string" in {
@@ -68,7 +68,7 @@ class HelloSpec extends FlatSpec with Matchers {
     val parser1 = "hello"
     val parser2 = "parser"
     val parser3 = "hoge"
-    parseAll("helloparserhoge", parser1 ~ parser2 ~ parser3) should be(Right((("hello", "parser"), "hoge")))
+    parseAll("helloparserhoge", parser1 ~ parser2 ~ parser3) should be(Right(new ~(new ~("hello", "parser"), "hoge")))
   }
 
   "Connected Parser (a ~> b <~ c)" should "parse (abc) to (b)" in {
@@ -86,7 +86,7 @@ class HelloSpec extends FlatSpec with Matchers {
   "Parser (!a ~ b)" should "parse (b) to be success" in {
     val parser1 = "hello"
     val parser2 = "hey"
-    parseAll("hey", !parser1 ~ parser2) should be(Right((), "hey"))
+    parseAll("hey", !parser1 ~ parser2) should be(Right(new ~((), "hey")))
   }
 
   "Parser (a / b)" should "parse (b) to be success" in {
@@ -109,6 +109,16 @@ class HelloSpec extends FlatSpec with Matchers {
   "Parser (a*)" should "parse () to be success" in {
     val parser1: Parser[String] = "hello"
     parseAll("", parser1.*) should be(Right(List()))
+  }
+
+  "Parser (a+)" should "parse (aa) to be success" in {
+    val parser1: Parser[String] = "hello"
+    parseAll("hellohello", parser1.+) should be(Right(List("hello", "hello")))
+  }
+
+  "Parser (a+)" should "parse () to be not success" in {
+    val parser1: Parser[String] = "hello"
+    parseAll("", parser1.+) should be(Left(ParseError(" cannot match with hello", State("", 0))))
   }
 
   "Parser (a?)" should "parse () to be success" in {

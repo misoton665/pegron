@@ -1,6 +1,7 @@
 package org.misoton.pegron
 
 import scala.util.matching.Regex
+import org.misoton.pegron.ParsedWord._
 
 object ParserCombinator {
 
@@ -21,10 +22,10 @@ object ParserCombinator {
 
     override def toString(): String = name
 
-    def ~[R](that: Parser[R]): Parser[(T, R)] = parserGen((in) => {
+    def ~[R](that: Parser[R]): Parser[T ~ R] = parserGen((in) => {
       this(in) match {
-        case Right((a, in2)) => that(in2) match {
-          case Right((b, in3)) => Right(((a, b), in3))
+        case Right((a , in2)) => that(in2) match {
+          case Right((b, in3)) => Right((new ~(a, b), in3))
           case Left(e) => Left(e)
         }
         case Left(e) => Left(e)
@@ -33,14 +34,14 @@ object ParserCombinator {
 
     def ~>[R](that: Parser[R]): Parser[R] = parserGen((in) => {
       (this ~ that)(in) match {
-        case Right(((_, a), in2)) => Right((a, in2))
+        case Right((_ ~ a, in2)) => Right((a, in2))
         case Left(e) => Left(e)
       }
     }).named(this.name + "~>" + that.name)
 
     def <~[R](that: Parser[R]): Parser[T] = parserGen((in) => {
       (this ~ that)(in) match {
-        case Right(((a, _), in2)) => Right((a, in2))
+        case Right((a ~ _, in2)) => Right((a, in2))
         case Left(e) => Left(e)
       }
     }).named(this.name + "<~" + that.name)
@@ -60,9 +61,7 @@ object ParserCombinator {
         case Right((a, s)) => Left(ParseError("Parsing succeed, but excepted to failure: " + a, s))
         case Left(e) => Right((), e.state)
       }
-    }).named("!" + this.name)
-
-    def unary_& : Parser[Unit] = !(!this)
+    }).named("!" + this)
 
     def `*`: Parser[List[T]] = parserGen((in) => {
       def parse(state: State, parser: Parser[T]): ParseResult[List[T]] = {
@@ -124,6 +123,8 @@ object ParserCombinator {
       }
     })
   }
+
+  def and[T](parser: Parser[T]): Parser[Unit] = !(!(parser))
 
   def parserGen[T](f: State => ParseResult[T]): Parser[T] =
     new Parser[T] {
